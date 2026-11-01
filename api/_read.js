@@ -93,7 +93,7 @@ export async function firstBuyers(mint, { maxPages = 40, exclude = [] } = {}) {
   for (let i = 0; i < sigs.length && seats.length < SEATS; i += step) {
     const chunk = sigs.slice(i, i + step);
     if (process.env.RPC_PAUSE) await sleep(+process.env.RPC_PAUSE);
-    const txs = await rpcBatch(chunk.map(s => ['getTransaction', [s.signature, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 0, commitment: 'confirmed' }]]));
+    const txs = await rpcBatch(chunk.map(s => ['getTransaction', [s.signature, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 1, commitment: 'confirmed' }]]));
     txs.forEach((tx, k) => {
       if (!tx || tx.meta?.err) return;
       const keys = tx.transaction.message.accountKeys.map(a => (typeof a === 'string' ? { pubkey: a } : a));

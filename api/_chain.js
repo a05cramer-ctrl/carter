@@ -114,7 +114,7 @@ export async function usedVaults(treasury) {
       } else needTx.push(s.signature);
     }
     for (const sig of needTx.slice(0, 50)) {
-      const tx = await rpc('getTransaction', [sig, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 0, commitment: 'confirmed' }]);
+      const tx = await rpc('getTransaction', [sig, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 1, commitment: 'confirmed' }]);
       for (const ix of tx?.transaction?.message?.instructions || []) {
         if ((ix.programId === MEMO_PROGRAM_ID || ix.program === 'spl-memo') && typeof ix.parsed === 'string') {
           const p = parseLaunchMemo(ix.parsed); if (p) found.add(p.vault);

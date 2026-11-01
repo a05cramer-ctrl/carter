@@ -9,7 +9,7 @@ export default async function handler(req, res) {
       const sigs = (await rpc('getSignaturesForAddress', [treasury, { limit: 500 }])).filter(s => !s.err);
       const out = [];
       for (let i = 0; i < sigs.length; i += 50) {
-        const txs = await rpcBatch(sigs.slice(i, i + 50).map(s => ['getTransaction', [s.signature, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 0 }]]));
+        const txs = await rpcBatch(sigs.slice(i, i + 50).map(s => ['getTransaction', [s.signature, { encoding: 'jsonParsed', maxSupportedTransactionVersion: 1 }]]));
         txs.forEach((tx, k) => { for (const m of memosOfParsed(tx)) { const f = m.split('|'); if (f[0] === 'CHARTER' && f[1] === 'LAUNCH' && isAddr(f[2])) out.push({ mint: f[2], vault: f[3], sig: sigs[i + k].signature, t: tx.blockTime, launcher: tx.transaction.message.accountKeys[0].pubkey || tx.transaction.message.accountKeys[0] }); } });
       }
       const mints = out.map(c => c.mint);
